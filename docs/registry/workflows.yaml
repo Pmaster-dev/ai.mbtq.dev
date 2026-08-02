@@ -1,0 +1,42 @@
+version: 1
+updated_at: "2026-08-02"
+workflows:
+  - id: issue-labeled
+    file: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/.github/workflows/issue-labled.yml
+    purpose: Auto-comment and relabel issues when specific labels are applied
+    trigger:
+      - issues:labeled
+    status: keep
+
+  - id: jekyll-gh-pages
+    file: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/.github/workflows/jekyll-gh-pages.yml
+    purpose: Build and deploy Jekyll site to GitHub Pages
+    trigger:
+      - push:main
+      - workflow_dispatch
+    status: archive
+
+  - id: mbtq-wcag-check
+    file: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/.github/workflows/mbtq-wcag-check.yml
+    purpose: Accessibility/WCAG compliance validation
+    trigger:
+      - push
+      - pull_request
+      - workflow_dispatch
+    status: update
+    note: Workflow currently has syntax/branch filter issues and needs hardening.
+
+  - id: pinkflow
+    file: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/.github/workflows/pinkflow.yml
+    purpose: Reserved for PinkyAI documentation automation
+    trigger: []
+    status: archive
+
+  - id: dependabot
+    file: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/.github/dependabot.yml
+    purpose: Automated dependency update PRs
+    trigger:
+      - schedule:daily
+      - schedule:weekly
+    status: update
+    note: Config directories should be aligned to actual repository package locations.

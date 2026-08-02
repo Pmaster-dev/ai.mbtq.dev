@@ -1,0 +1,39 @@
+version: 1
+updated_at: "2026-08-02"
+apis:
+  - id: platform-api-doc
+    name: Platform API (documented)
+    file: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/docs/API.md
+    kind: reference-doc
+    status: update
+    note: Host, auth examples, and endpoint contracts require verification against implementation.
+
+  - id: nextjs-api-auth
+    name: Next.js Auth API Routes
+    path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/app/api/auth
+    kind: implementation
+    status: keep
+
+  - id: nextjs-api-chat
+    name: Next.js Chat API Routes
+    path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/app/api/chat
+    kind: implementation
+    status: keep
+
+  - id: nextjs-api-health
+    name: Next.js Health API Routes
+    path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/app/api/health
+    kind: implementation
+    status: keep
+
+  - id: nextjs-api-rss
+    name: Next.js RSS API Routes
+    path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/app/api/rss
+    kind: implementation
+    status: keep
+
+  - id: nextjs-api-upload
+    name: Next.js Upload API Routes
+    path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/app/api/upload
+    kind: implementation
+    status: keep
