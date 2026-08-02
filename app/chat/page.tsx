@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,6 +14,15 @@ interface Message {
   id: string
   role: 'user' | 'assistant'
   content: string
+}
+
+type ChatMode = "visual-chat" | "realtime-collaboration" | "agent-loop"
+type LoopSchedule = "single" | "5m" | "15m"
+type InterfaceProfile = "vr4deaf" | "vuri-ai"
+
+interface HealthStatus {
+  version: string
+  labels?: string[]
 }
 
 // Generate unique ID with fallback
@@ -37,6 +46,27 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [chatMode, setChatMode] = useState<ChatMode>("visual-chat")
+  const [enableCollaboration, setEnableCollaboration] = useState(false)
+  const [loopSchedule, setLoopSchedule] = useState<LoopSchedule>("single")
+  const [ragResearchFocus, setRagResearchFocus] = useState(true)
+  const [interfaceProfile, setInterfaceProfile] = useState<InterfaceProfile>("vr4deaf")
+  const [health, setHealth] = useState<HealthStatus | null>(null)
+
+  useEffect(() => {
+    const fetchHealth = async () => {
+      try {
+        const response = await fetch("/api/health")
+        if (!response.ok) return
+        const result = await response.json() as HealthStatus
+        setHealth(result)
+      } catch {
+        // no-op
+      }
+    }
+
+    fetchHealth()
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
@@ -64,6 +94,13 @@ export default function ChatPage() {
           messages: [...messages, userMessage].map(m => ({ role: m.role, content: m.content })),
           userId: user?.id,
           sessionId: sessionId,
+          orchestration: {
+            mode: chatMode,
+            interfaceProfile,
+            collaboration: enableCollaboration,
+            loopSchedule,
+            ragResearchFocus,
+          },
         }),
       })
 
@@ -160,6 +197,87 @@ export default function ChatPage() {
           every interaction!
         </p>
       </div>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Visual Chat Entry Point</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Session Mode</label>
+              <select
+                value={chatMode}
+                onChange={(e) => setChatMode(e.target.value as ChatMode)}
+                className="w-full border rounded-md px-3 py-2 bg-background"
+                disabled={isLoading}
+              >
+                <option value="visual-chat">Visual Chat (default)</option>
+                <option value="realtime-collaboration">Real-time Collaboration</option>
+                <option value="agent-loop">Agent Loop</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Loop Schedule</label>
+              <select
+                value={loopSchedule}
+                onChange={(e) => setLoopSchedule(e.target.value as LoopSchedule)}
+                className="w-full border rounded-md px-3 py-2 bg-background"
+                disabled={isLoading}
+              >
+                <option value="single">Single Run</option>
+                <option value="5m">Every 5 Minutes</option>
+                <option value="15m">Every 15 Minutes</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Org Profile</label>
+              <select
+                value={interfaceProfile}
+                onChange={(e) => setInterfaceProfile(e.target.value as InterfaceProfile)}
+                className="w-full border rounded-md px-3 py-2 bg-background"
+                disabled={isLoading}
+              >
+                <option value="vr4deaf">VR4DEAF</option>
+                <option value="vuri-ai">Vuri AI</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 text-sm">
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={enableCollaboration}
+                onChange={(e) => setEnableCollaboration(e.target.checked)}
+                disabled={isLoading}
+              />
+              Enable collaboration layer for operator + AI workflows
+            </label>
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={ragResearchFocus}
+                onChange={(e) => setRagResearchFocus(e.target.checked)}
+                disabled={isLoading}
+              />
+              Prioritize Deaf-first research/RAG context
+            </label>
+          </div>
+          <div className="rounded-lg border p-3 text-sm">
+            <p className="font-medium mb-1">Workflow Steps</p>
+            <ol className="list-decimal list-inside text-muted-foreground space-y-1">
+              <li>Ingest visual/sign input or text request</li>
+              <li>Run Deaf-first analysis and context retrieval</li>
+              <li>Route through selected org visual panel profile</li>
+              <li>Generate response with collaboration/operator alignment</li>
+              <li>Loop per selected schedule when enabled</li>
+            </ol>
+          </div>
+          <div className="text-xs text-muted-foreground">
+            Version: {health?.version ?? "unknown"} · Labels: {(health?.labels?.join(", ") ?? "vr4deaf, deafauth, pinksync")}
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="mb-6">
         <CardHeader>

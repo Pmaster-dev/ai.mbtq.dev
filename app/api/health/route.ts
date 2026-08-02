@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
+import { PLATFORM_VERSION, PLATFORM_LABELS } from '@/lib/platform'
 
 interface HealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy'
   version: string
+  labels: string[]
   timestamp: string
   uptime: number
   services: {
@@ -18,7 +20,8 @@ const startTime = Date.now()
 export async function GET(): Promise<NextResponse<HealthStatus>> {
   const status: HealthStatus = {
     status: 'healthy',
-    version: '2.0.0',
+    version: PLATFORM_VERSION,
+    labels: [...PLATFORM_LABELS],
     timestamp: new Date().toISOString(),
     uptime: Math.floor((Date.now() - startTime) / 1000),
     services: {
