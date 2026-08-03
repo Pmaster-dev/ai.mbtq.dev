@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mbtq.dev/specs/schemas/v1/workflow.spec.schema.json",
+  "title": "MBTQ Workflow Specification",
+  "type": "object",
+  "required": ["specType"],
+  "properties": {
+    "specType": {
+      "type": "string",
+      "const": "workflow.spec"
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "./common-fields.schema.json"
+    }
+  ]
+}

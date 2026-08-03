@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mbtq.dev/specs/schemas/v1/magician.spec.schema.json",
+  "title": "MBTQ Magician Specification",
+  "type": "object",
+  "required": ["specType"],
+  "properties": {
+    "specType": {
+      "type": "string",
+      "const": "magician.spec"
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "./common-fields.schema.json"
+    }
+  ]
+}

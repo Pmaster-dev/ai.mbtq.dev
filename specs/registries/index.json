@@ -1,0 +1,214 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-08-03T01:18:10.596Z",
+  "totalSpecs": 7,
+  "byType": {
+    "agent.spec": [
+      "agent.spec.auditor"
+    ],
+    "dispatch.spec": [
+      "dispatch.spec.router"
+    ],
+    "magician.spec": [
+      "magician.developer"
+    ],
+    "provider.spec": [
+      "provider.github-actions"
+    ],
+    "runtime.spec": [
+      "runtime.multi-framework"
+    ],
+    "service.spec": [
+      "svc.registry.foundation"
+    ],
+    "workflow.spec": [
+      "workflow.spec-governance"
+    ]
+  },
+  "specs": [
+    {
+      "id": "agent.spec.auditor",
+      "specType": "agent.spec",
+      "name": "Spec Auditor Agent",
+      "version": "0.1.0",
+      "lifecycleState": "draft",
+      "owner": "MBTQ Core Team",
+      "path": "specs/agents/spec-auditor.agent.spec.json",
+      "dependencies": [
+        "svc.registry.foundation"
+      ],
+      "runtime": {
+        "primary": "python-worker",
+        "supported": [
+          "fastapi",
+          "deno",
+          "python-worker",
+          "nodejs"
+        ]
+      },
+      "tags": [
+        "agent",
+        "validation",
+        "governance"
+      ]
+    },
+    {
+      "id": "dispatch.spec.router",
+      "specType": "dispatch.spec",
+      "name": "Spec Dispatch Router",
+      "version": "0.1.0",
+      "lifecycleState": "draft",
+      "owner": "MBTQ Core Team",
+      "path": "specs/dispatch/spec-dispatch.dispatch.spec.json",
+      "dependencies": [
+        "workflow.spec-governance"
+      ],
+      "runtime": {
+        "primary": "deno",
+        "supported": [
+          "fastapi",
+          "deno",
+          "python-worker",
+          "nodejs"
+        ]
+      },
+      "tags": [
+        "dispatch",
+        "routing",
+        "events"
+      ]
+    },
+    {
+      "id": "magician.developer",
+      "specType": "magician.spec",
+      "name": "Developer Magician",
+      "version": "0.1.0",
+      "lifecycleState": "draft",
+      "owner": "MBTQ Core Team",
+      "path": "specs/magicians/developer-magician.magician.spec.json",
+      "dependencies": [
+        "agent.spec.auditor",
+        "dispatch.spec.router"
+      ],
+      "runtime": {
+        "primary": "fastapi",
+        "supported": [
+          "fastapi",
+          "deno",
+          "python-worker",
+          "nodejs"
+        ]
+      },
+      "tags": [
+        "magician",
+        "developer",
+        "orchestration"
+      ]
+    },
+    {
+      "id": "provider.github-actions",
+      "specType": "provider.spec",
+      "name": "GitHub Actions Provider",
+      "version": "0.1.0",
+      "lifecycleState": "draft",
+      "owner": "MBTQ Core Team",
+      "path": "specs/providers/github-actions.provider.spec.json",
+      "dependencies": [
+        "workflow.spec-governance"
+      ],
+      "runtime": {
+        "primary": "github-actions",
+        "supported": [
+          "fastapi",
+          "deno",
+          "python-worker",
+          "nodejs"
+        ]
+      },
+      "tags": [
+        "provider",
+        "ci",
+        "github"
+      ]
+    },
+    {
+      "id": "runtime.multi-framework",
+      "specType": "runtime.spec",
+      "name": "Multi-Runtime Compatibility Contract",
+      "version": "0.1.0",
+      "lifecycleState": "draft",
+      "owner": "MBTQ Core Team",
+      "path": "specs/runtimes/multi-runtime.runtime.spec.json",
+      "dependencies": [],
+      "runtime": {
+        "primary": "agnostic",
+        "supported": [
+          "fastapi",
+          "deno",
+          "python-worker",
+          "nodejs",
+          "future-runtime"
+        ]
+      },
+      "tags": [
+        "runtime",
+        "agnostic",
+        "compatibility"
+      ]
+    },
+    {
+      "id": "svc.registry.foundation",
+      "specType": "service.spec",
+      "name": "Registry Foundation Service",
+      "version": "0.1.0",
+      "lifecycleState": "draft",
+      "owner": "MBTQ Core Team",
+      "path": "specs/services/foundation-registry.service.spec.json",
+      "dependencies": [
+        "provider.github-actions",
+        "workflow.spec-governance"
+      ],
+      "runtime": {
+        "primary": "nodejs",
+        "supported": [
+          "fastapi",
+          "deno",
+          "python-worker",
+          "nodejs"
+        ]
+      },
+      "tags": [
+        "registry",
+        "foundation",
+        "architecture"
+      ]
+    },
+    {
+      "id": "workflow.spec-governance",
+      "specType": "workflow.spec",
+      "name": "Spec Governance Workflow",
+      "version": "0.1.0",
+      "lifecycleState": "draft",
+      "owner": "MBTQ Core Team",
+      "path": "specs/workflows/spec-governance.workflow.spec.json",
+      "dependencies": [
+        "agent.spec.auditor",
+        "provider.github-actions"
+      ],
+      "runtime": {
+        "primary": "github-actions",
+        "supported": [
+          "fastapi",
+          "deno",
+          "python-worker",
+          "nodejs"
+        ]
+      },
+      "tags": [
+        "workflow",
+        "registry",
+        "ci"
+      ]
+    }
+  ]
+}

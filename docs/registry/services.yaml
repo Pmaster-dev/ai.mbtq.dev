@@ -1,0 +1,52 @@
+version: 1
+updated_at: "2026-08-02"
+services:
+  - id: platform-web
+    name: ai.mbtq.dev web platform
+    type: application-service
+    implementation:
+      stack: Next.js
+      path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/app
+    status: keep
+    source_of_truth:
+      - /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/README.md
+
+  - id: deafauth
+    name: DeafAUTH Identity Management
+    type: microservice
+    implementation:
+      stack: Next.js + Better Auth
+      path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/services/deafauth
+    status: update
+    source_of_truth:
+      - /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/docs/singlesource.md
+
+  - id: pinksync
+    name: PinkSync Provisioning
+    type: microservice
+    implementation:
+      stack: Node.js + Fastify
+      path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/services/pinksync
+    status: update
+    source_of_truth:
+      - /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/docs/singlesource.md
+
+  - id: accessibility-nodes
+    name: Accessibility Node Runtime
+    type: client-runtime
+    implementation:
+      stack: React + Next.js
+      path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/services/accessibility-nodes
+    status: update
+    source_of_truth:
+      - /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/docs/singlesource.md
+
+  - id: fibonrose
+    name: Fibonrose Reputation and Logging
+    type: data-service
+    implementation:
+      stack: Next.js + Cassandra + ChromaDB
+      path: /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/services/fibonrose
+    status: update
+    source_of_truth:
+      - /home/runner/work/ai.mbtq.dev/ai.mbtq.dev/docs/singlesource.md

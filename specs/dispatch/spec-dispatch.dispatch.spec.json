@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "specType": "dispatch.spec",
+  "id": "dispatch.spec.router",
+  "name": "Spec Dispatch Router",
+  "version": "0.1.0",
+  "description": "Routes specification change events to validation and indexing workflows.",
+  "inputs": [
+    {
+      "name": "event",
+      "type": "spec.change.requested",
+      "required": true,
+      "description": "Incoming event requesting spec processing."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "dispatchDecision",
+      "type": "dispatch.route",
+      "description": "Routing decision for downstream handlers."
+    }
+  ],
+  "dependencies": ["workflow.spec-governance"],
+  "eventsProduced": ["dispatch.spec.routed"],
+  "eventsConsumed": ["spec.change.requested"],
+  "runtime": {
+    "primary": "deno",
+    "supported": ["fastapi", "deno", "python-worker", "nodejs"]
+  },
+  "securityRequirements": ["input-signature-verification"],
+  "permissions": ["events:read", "events:write"],
+  "healthChecks": [
+    {
+      "name": "dispatch-loop",
+      "method": "event",
+      "target": "dispatch.spec.routed",
+      "intervalSeconds": 60
+    }
+  ],
+  "lifecycleState": "draft",
+  "owner": "MBTQ Core Team",
+  "tags": ["dispatch", "routing", "events"]
+}

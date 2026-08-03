@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "specType": "workflow.spec",
+  "id": "workflow.spec-governance",
+  "name": "Spec Governance Workflow",
+  "version": "0.1.0",
+  "description": "Workflow that validates specs, builds registry index, and generates architecture docs.",
+  "inputs": [
+    {
+      "name": "pullRequest",
+      "type": "github.pull_request",
+      "required": true,
+      "description": "Pull request event payload."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "governanceResult",
+      "type": "workflow.result",
+      "description": "Pass/fail result with generated artifacts."
+    }
+  ],
+  "dependencies": ["agent.spec.auditor", "provider.github-actions"],
+  "eventsProduced": ["workflow.spec-governance.completed"],
+  "eventsConsumed": ["spec.change.requested"],
+  "runtime": {
+    "primary": "github-actions",
+    "supported": ["fastapi", "deno", "python-worker", "nodejs"]
+  },
+  "securityRequirements": ["least-privilege-permissions", "artifact-auditability"],
+  "permissions": ["contents:read"],
+  "healthChecks": [
+    {
+      "name": "workflow-trigger",
+      "method": "github-event",
+      "target": "pull_request",
+      "intervalSeconds": 0
+    }
+  ],
+  "lifecycleState": "draft",
+  "owner": "MBTQ Core Team",
+  "tags": ["workflow", "registry", "ci"]
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "specType": "service.spec",
+  "id": "svc.registry.foundation",
+  "name": "Registry Foundation Service",
+  "version": "0.1.0",
+  "description": "Central registry-driven control plane for MBTQ architecture metadata.",
+  "inputs": [
+    {
+      "name": "specChange",
+      "type": "spec.bundle",
+      "required": true,
+      "description": "Proposed spec changes from pull requests."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "registryIndex",
+      "type": "registry.index",
+      "description": "Machine-readable registry index artifact."
+    }
+  ],
+  "dependencies": ["provider.github-actions", "workflow.spec-governance"],
+  "eventsProduced": ["registry.index.generated", "spec.validation.completed"],
+  "eventsConsumed": ["spec.change.requested"],
+  "runtime": {
+    "primary": "nodejs",
+    "supported": ["fastapi", "deno", "python-worker", "nodejs"]
+  },
+  "securityRequirements": ["signed-commits", "branch-protection", "artifact-integrity"],
+  "permissions": ["contents:read", "pull-requests:read"],
+  "healthChecks": [
+    {
+      "name": "spec-validator",
+      "method": "command",
+      "target": "npm run specs:validate",
+      "intervalSeconds": 0
+    }
+  ],
+  "lifecycleState": "draft",
+  "owner": "MBTQ Core Team",
+  "tags": ["registry", "foundation", "architecture"]
+}

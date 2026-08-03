@@ -1,0 +1,43 @@
+name: Spec Registry Validation
+
+on:
+  pull_request:
+    paths:
+      - 'specs/**'
+      - 'docs/ARCHITECTURE_REGISTRY.md'
+      - '.github/workflows/spec-registry-validation.yml'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-registry:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate specs
+        run: npm run specs:validate
+
+      - name: Build registry index
+        run: npm run specs:index
+
+      - name: Generate architecture docs
+        run: npm run specs:docs
+
+      - name: Check generated artifacts are committed
+        run: |
+          git diff --exit-code -- specs/registries/index.json docs/ARCHITECTURE_REGISTRY.md

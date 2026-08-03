@@ -1,12 +1,39 @@
 import { groq } from "@ai-sdk/groq"
 import { streamText, convertToCoreMessages } from "ai"
 import { awardTokens, saveConversation } from "@/lib/db"
+import { z } from "zod"
+
+const ChatRequestSchema = z.object({
+  messages: z.array(z.object({
+    role: z.enum(["user", "assistant"]),
+    content: z.string().min(1),
+  })).min(1),
+  userId: z.string().optional(),
+  sessionId: z.string().optional(),
+  orchestration: z.object({
+    mode: z.enum(["visual-chat", "realtime-collaboration", "agent-loop"]).default("visual-chat"),
+    interfaceProfile: z.enum(["vr4deaf", "vuri-ai"]).default("vr4deaf"),
+    collaboration: z.boolean().default(false),
+    loopSchedule: z.enum(["single", "5m", "15m"]).default("single"),
+    ragResearchFocus: z.boolean().default(true),
+  }).optional(),
+})
 
 export const maxDuration = 30
 
 export async function POST(req: Request) {
   try {
-    const { messages, userId, sessionId } = await req.json()
+    const payload = ChatRequestSchema.parse(await req.json())
+    const { messages, userId, sessionId, orchestration } = payload
+
+    const orchestrationPrompt = orchestration
+      ? `\n\n🧭 Active session mode:
+- Mode: ${orchestration.mode}
+- Interface profile: ${orchestration.interfaceProfile}
+- Collaboration layer: ${orchestration.collaboration ? "enabled" : "disabled"}
+- Loop schedule: ${orchestration.loopSchedule}
+- Deaf-first RAG research focus: ${orchestration.ragResearchFocus ? "enabled" : "disabled"}`
+      : ""
 
     // Save conversation to Neon
     if (userId && sessionId) {
@@ -15,7 +42,7 @@ export async function POST(req: Request) {
 
     const result = await streamText({
       model: groq("llama-3.1-70b-versatile"),
-      messages: convertToCoreMessages(messages),
+      messages: convertToCoreMessages(messages as any),
       system: `You are PINKY AI, a specialized assistant for sign language interpretation and accessibility.
 
 🎯 Your expertise includes:
@@ -42,7 +69,9 @@ export async function POST(req: Request) {
 - Encourage participation in the Sign-to-Earn ecosystem
 - Mention token rewards when appropriate
 
-Always be inclusive, respectful, and focused on advancing accessibility through AI.`,
+Always be inclusive, respectful, and focused on advancing accessibility through AI.
+
+Prioritize Deaf-first initiatives, practical implementation guidance, and concise, operationally useful answers.${orchestrationPrompt}`,
       onFinish: async (result) => {
         // Award tokens for interaction
         if (userId) {
@@ -51,7 +80,7 @@ Always be inclusive, respectful, and focused on advancing accessibility through 
       },
     })
 
-    return result.toDataStreamResponse()
+    return (result as any).toDataStreamResponse()
   } catch (error) {
     console.error("Chat API error:", error)
     return new Response("Internal Server Error", { status: 500 })
