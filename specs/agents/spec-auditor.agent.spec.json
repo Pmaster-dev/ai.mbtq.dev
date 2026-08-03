@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "specType": "agent.spec",
+  "id": "agent.spec.auditor",
+  "name": "Spec Auditor Agent",
+  "version": "0.1.0",
+  "description": "Validates structural integrity of MBTQ specifications in pull requests.",
+  "inputs": [
+    {
+      "name": "specFiles",
+      "type": "array<spec>",
+      "required": true,
+      "description": "Specification files detected in repository."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "validationReport",
+      "type": "report.json",
+      "description": "Validation result summary per spec file."
+    }
+  ],
+  "dependencies": ["svc.registry.foundation"],
+  "eventsProduced": ["spec.validation.completed"],
+  "eventsConsumed": ["spec.change.requested"],
+  "runtime": {
+    "primary": "python-worker",
+    "supported": ["fastapi", "deno", "python-worker", "nodejs"]
+  },
+  "securityRequirements": ["read-only-execution", "audit-logging"],
+  "permissions": ["contents:read"],
+  "healthChecks": [
+    {
+      "name": "agent-ready",
+      "method": "event",
+      "target": "agent.heartbeat",
+      "intervalSeconds": 60
+    }
+  ],
+  "lifecycleState": "draft",
+  "owner": "MBTQ Core Team",
+  "tags": ["agent", "validation", "governance"]
+}

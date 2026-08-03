@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "specType": "magician.spec",
+  "id": "magician.developer",
+  "name": "Developer Magician",
+  "version": "0.1.0",
+  "description": "Registry-defined agent profile for developer workflow orchestration.",
+  "inputs": [
+    {
+      "name": "taskRequest",
+      "type": "task.request",
+      "required": true,
+      "description": "Developer task request payload."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "taskPlan",
+      "type": "task.plan",
+      "description": "Generated execution plan for developer workflows."
+    }
+  ],
+  "dependencies": ["agent.spec.auditor", "dispatch.spec.router"],
+  "eventsProduced": ["magician.task.planned"],
+  "eventsConsumed": ["task.requested"],
+  "runtime": {
+    "primary": "fastapi",
+    "supported": ["fastapi", "deno", "python-worker", "nodejs"]
+  },
+  "securityRequirements": ["role-based-access-control", "action-audit-log"],
+  "permissions": ["tasks:read", "tasks:write"],
+  "healthChecks": [
+    {
+      "name": "planner-ready",
+      "method": "http",
+      "target": "/healthz",
+      "intervalSeconds": 30
+    }
+  ],
+  "lifecycleState": "draft",
+  "owner": "MBTQ Core Team",
+  "tags": ["magician", "developer", "orchestration"]
+}

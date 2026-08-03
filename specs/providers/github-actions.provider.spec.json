@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "specType": "provider.spec",
+  "id": "provider.github-actions",
+  "name": "GitHub Actions Provider",
+  "version": "0.1.0",
+  "description": "Provider contract for pull request validation and registry automation.",
+  "inputs": [
+    {
+      "name": "workflowEvent",
+      "type": "github.event",
+      "required": true,
+      "description": "GitHub workflow event context."
+    }
+  ],
+  "outputs": [
+    {
+      "name": "workflowRun",
+      "type": "github.workflow_run",
+      "description": "Execution result and artifacts from workflow run."
+    }
+  ],
+  "dependencies": ["workflow.spec-governance"],
+  "eventsProduced": ["provider.workflow.completed"],
+  "eventsConsumed": ["spec.change.requested"],
+  "runtime": {
+    "primary": "github-actions",
+    "supported": ["fastapi", "deno", "python-worker", "nodejs"]
+  },
+  "securityRequirements": ["ephemeral-credentials", "oidc-token-use"],
+  "permissions": ["contents:read"],
+  "healthChecks": [
+    {
+      "name": "runner-availability",
+      "method": "provider",
+      "target": "github-actions",
+      "intervalSeconds": 0
+    }
+  ],
+  "lifecycleState": "draft",
+  "owner": "MBTQ Core Team",
+  "tags": ["provider", "ci", "github"]
+}

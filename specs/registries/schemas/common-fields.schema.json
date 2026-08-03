@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mbtq.dev/specs/schemas/v1/common-fields.schema.json",
+  "title": "MBTQ Common Spec Fields",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "version",
+    "description",
+    "inputs",
+    "outputs",
+    "dependencies",
+    "eventsProduced",
+    "eventsConsumed",
+    "runtime",
+    "securityRequirements",
+    "permissions",
+    "healthChecks",
+    "lifecycleState",
+    "owner",
+    "tags"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "name": {
+      "type": "string",
+      "minLength": 2
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 5
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "required": { "type": "boolean" },
+          "description": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "eventsProduced": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "eventsConsumed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["primary", "supported"],
+      "properties": {
+        "primary": { "type": "string" },
+        "supported": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "securityRequirements": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "permissions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "healthChecks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "method", "target"],
+        "properties": {
+          "name": { "type": "string" },
+          "method": { "type": "string" },
+          "target": { "type": "string" },
+          "intervalSeconds": { "type": "number" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "lifecycleState": {
+      "type": "string",
+      "enum": ["draft", "active", "deprecated", "archived"]
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 2
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}
